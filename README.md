@@ -1,1 +1,1 @@
-# digital-policy-management
+# digital policy managment

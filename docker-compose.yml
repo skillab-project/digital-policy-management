@@ -1,0 +1,58 @@
+version: "3.3"
+
+services:
+  backend-policy:
+    build:
+      context: ./backend/.
+    container_name: backend-policy
+    depends_on:
+      - db-policy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-policy:5432/test_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=30a301d7257
+    ports:
+      - '8085:8080'
+
+  db-policy:
+    image: postgres:14.7
+    container_name: db-policy
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 30a301d7257
+      POSTGRES_DB: test_db
+    volumes:
+       - policy_postgresql:/var/lib/postgresql
+       - policy_postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5455:5432'
+
+  jbpm-policy:
+    image: nikosnikolaidis/jbpm-allowframes:7.61.0.Final
+    container_name: jbpm-policy
+    environment:
+      JBPM_DB_DRIVER: postgres
+      JBPM_DB_HOST: jbpm-postgres-policy
+    depends_on:
+      - jbpm-postgres-policy
+    volumes:
+      - niogit:/opt/jboss/wildfly/.niogit:Z
+    ports:
+      - '8181:8080'
+      - '8001:8001'
+  
+  jbpm-postgres-policy:
+    image: postgres:14.7
+    container_name: jbpm-postgres-policy
+    volumes:
+      - policy_postgres_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: jbpm
+      POSTGRES_USER: jbpm
+      POSTGRES_PASSWORD: jbpm
+
+volumes:
+  policy_postgresql:
+  policy_postgresql_data:
+  policy_postgres_db:
+  niogit:
