@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   backend-policy:
+    image: ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:${DOCKER_TAG}
     build:
       context: ./backend/.
     container_name: backend-policy
