@@ -37,8 +37,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
                         .mvcMatchers("/api","/api-ui","/swagger-ui/**","/api/swagger-config/**","/user/token/refresh/**").permitAll()
+                        .mvcMatchers(HttpMethod.POST,"/indicator").permitAll()
+                        .mvcMatchers(HttpMethod.GET,"/indicator").permitAll()
                         .mvcMatchers(HttpMethod.POST,"/indicator/*").permitAll()
                         .mvcMatchers(HttpMethod.GET,"/indicator/*").permitAll()
+                        .mvcMatchers(HttpMethod.POST,"/metric").permitAll()
+                        .mvcMatchers(HttpMethod.GET,"/metric").permitAll()
                         .mvcMatchers(HttpMethod.POST,"/metric/*").permitAll()
                         .mvcMatchers(HttpMethod.GET,"/metric/*").permitAll()
                         .mvcMatchers(HttpMethod.POST,"/report/*").permitAll()
