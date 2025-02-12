@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReport;
+import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReportSlim;
 import gr.uom.strategicplanning.models.MetricReport;
 import gr.uom.strategicplanning.models.IndicatorReport;
 import gr.uom.strategicplanning.services.MetricReportService;
@@ -25,6 +26,11 @@ public class ReportController {
     @PostMapping("/indicator")
     IndicatorReport createIndicatorReport(@RequestBody IndicatorUpdateReport indicatorUpdateReport){
         return indicatorReportService.createIndicatorReport(indicatorUpdateReport);
+    }
+
+    @PostMapping("/indicator/increaseby")
+    IndicatorReport createIndicatorReportIncreaseValue(@RequestBody IndicatorUpdateReportSlim indicatorUpdateReportSlim){
+        return indicatorReportService.createIndicatorReportIncreaseValue(indicatorUpdateReportSlim);
     }
 
     @GetMapping("/indicator")

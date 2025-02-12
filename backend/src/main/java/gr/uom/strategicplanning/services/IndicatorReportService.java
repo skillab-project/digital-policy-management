@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReport;
+import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReportSlim;
 import gr.uom.strategicplanning.models.Metric;
 import gr.uom.strategicplanning.models.MetricReport;
 import gr.uom.strategicplanning.models.Indicator;
@@ -50,6 +51,10 @@ public class IndicatorReportService {
         return indicatorReportRepository.findAllByIndicatorName(name);
     }
 
+    public IndicatorReport getLastIndicatorReportsByIndicatorName(String name){
+        return indicatorReportRepository.findFirstByIndicator_NameOrderByDateDesc(name);
+    }
+
     public IndicatorReport createIndicatorReport(IndicatorUpdateReport indicatorUpdateReport){
         Indicator indicator = indicatorRepository.findByName(indicatorUpdateReport.getName())
                 .orElseThrow(() -> {
@@ -63,6 +68,27 @@ public class IndicatorReportService {
         for(Metric i: indicator.getMetricList()){
             Double value = calculateMetric(i);
             MetricReport metricReport = new MetricReport(indicatorUpdateReport.getDate(), i, value);
+            MetricReportRepository.save(metricReport);
+        }
+
+        return indicatorReport;
+    }
+
+    public IndicatorReport createIndicatorReportIncreaseValue(IndicatorUpdateReportSlim indicatorUpdateReportSlim){
+        Indicator indicator = indicatorRepository.findByName(indicatorUpdateReportSlim.getName())
+                .orElseThrow(() -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Indicator with name "+indicatorUpdateReportSlim.getName()+" doesn't exist");
+                });
+        Double newValue = getLastIndicatorReportsByIndicatorName(indicator.getName()).getValue() +indicatorUpdateReportSlim.getValue();
+        Date currentDate = new Date();
+        IndicatorReport indicatorReport = new IndicatorReport(currentDate, indicator, newValue);
+        indicatorReportRepository.save(indicatorReport);
+
+        //update all metric that have this indicators
+        // by creating a MetricReport for each one
+        for(Metric i: indicator.getMetricList()){
+            Double value = calculateMetric(i);
+            MetricReport metricReport = new MetricReport(currentDate, i, value);
             MetricReportRepository.save(metricReport);
         }
 
