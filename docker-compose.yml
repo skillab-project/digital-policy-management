@@ -14,6 +14,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=30a301d7257
     ports:
       - '8085:8080'
+    networks:
+      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
 
@@ -29,15 +31,43 @@ services:
        - policy_postgresql_data:/var/lib/postgresql/data
     ports:
       - '5455:5432'
+    networks:
+      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
 
   jbpm-policy:
+    #image: jboss/jbpm-server-full:7.61.0.Final
     image: nikosnikolaidis/jbpm-allowframes:7.61.0.Final
     container_name: jbpm-policy
     environment:
-      JBPM_DB_DRIVER: postgres
-      JBPM_DB_HOST: jbpm-postgres-policy
+      - JBPM_DB_DRIVER=postgres
+      - JBPM_DB_HOST=jbpm-postgres-policy
+      - KIE_SERVER_LOCATION=http://localhost/jbpm/kie-server/services/rest/server
+      - BUSINESS_CENTRAL_HOSTNAME=http://localhost/jbpm/business-central
+      - BUSINESS_CENTRAL_CONTEXT=/jbpm/business-central
+      - APP_CONTEXT=/jbpm
+      - KIE_CONTEXT_PATH=/jbpm/business-central
+      - JAVA_OPTS="-Dorg.kie.bc.server.context=/jbpm/business-central \
+                   -Dorg.kie.server.controller=http://localhost/jbpm/business-central/rest/controller \
+                   -Dorg.kie.server.location=http://localhost/jbpm/kie-server/services/rest/server \
+                   -Dorg.uberfire.ext.security.context.force=true \
+                   -Djboss.bind.address=0.0.0.0 \
+                   -Dorg.uberfire.nio.git.ssh.host=0.0.0.0 \
+                   -Dorg.kie.server.controller=http://localhost/jbpm/business-central/rest/controller"
+      #JBPM_DB_DRIVER: postgres
+      #JBPM_DB_HOST: jbpm-postgres-policy
+      #KIE_SERVER_LOCATION: http://localhost/jbpm/kie-server/services/rest/server
+      #BUSINESS_CENTRAL_HOSTNAME: http://localhost/jbpm/business-central
+      #BUSINESS_CENTRAL_CONTEXT: /jbpm/business-central
+      #KIE_CONTEXT_PATH: /jbpm/business-central  # Fixing the incorrect path!
+      #JAVA_OPTS: >
+      #  -Dorg.kie.bc.server.context=/jbpm/business-central 
+      #  -Dorg.kie.server.location=http://localhost/jbpm/kie-server/services/rest/server
+      #  -Dorg.uberfire.nio.git.dir=/opt/jboss/wildfly/bin/.niogit 
+      #  -Dorg.kie.workbench.profile=FULL 
+      #  -Dorg.kie.bc.security.allowed.roles=admin,user
+      #APP_CONTEXT: /jbpm
     depends_on:
       - jbpm-postgres-policy
     volumes:
@@ -45,6 +75,8 @@ services:
     ports:
       - '8181:8080'
       - '8001:8001'
+    networks:
+      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
   
@@ -57,8 +89,14 @@ services:
       POSTGRES_DB: jbpm
       POSTGRES_USER: jbpm
       POSTGRES_PASSWORD: jbpm
+    networks:
+      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
+
+networks:
+  skillab-network:
+    external: true
 
 volumes:
   policy_postgresql:
