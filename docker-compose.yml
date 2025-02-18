@@ -14,8 +14,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=30a301d7257
     ports:
       - '8085:8080'
-    networks:
-      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
 
@@ -31,8 +29,6 @@ services:
        - policy_postgresql_data:/var/lib/postgresql/data
     ports:
       - '5455:5432'
-    networks:
-      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
 
@@ -75,8 +71,6 @@ services:
     ports:
       - '8181:8080'
       - '8001:8001'
-    networks:
-      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
   
@@ -89,14 +83,8 @@ services:
       POSTGRES_DB: jbpm
       POSTGRES_USER: jbpm
       POSTGRES_PASSWORD: jbpm
-    networks:
-      - skillab-network
     labels:
       io.portainer.accesscontrol.teams: skillab-all
-
-networks:
-  skillab-network:
-    external: true
 
 volumes:
   policy_postgresql:
