@@ -37,6 +37,18 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- OpenAPI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -49,6 +61,12 @@
 			<groupId>com.mashape.unirest</groupId>
 			<artifactId>unirest-java</artifactId>
 			<version>1.4.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.graalvm.sdk</groupId>
+			<artifactId>graal-sdk</artifactId>
+			<version>22.3.3</version>
 		</dependency>
 
 	</dependencies>

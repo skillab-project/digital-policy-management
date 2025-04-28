@@ -18,6 +18,9 @@ public class IndicatorUpdateReport {
         this.value = value;
     }
 
+    public IndicatorUpdateReport() {
+    }
+
     public Date getDate() {
         return date;
     }

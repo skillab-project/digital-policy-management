@@ -70,6 +70,7 @@ services:
       - jbpm-postgres-policy
     volumes:
       - niogit:/opt/jboss/wildfly/.niogit:Z
+      #- ./.niogit:/opt/jboss/wildfly/.niogit:Z
     ports:
       - '8181:8080'
       - '8001:8001'
@@ -95,3 +96,4 @@ volumes:
   policy_postgresql_data:
   policy_postgres_db:
   niogit:
+  #niogit:

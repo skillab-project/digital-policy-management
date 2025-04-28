@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.graalvm.polyglot.*;
+
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -31,9 +33,7 @@ public class IndicatorReportService {
     @Autowired
     IndicatorRepository indicatorRepository;
     @Autowired
-    MetricReportRepository MetricReportRepository;
-    @Autowired
-    MetricReportRepository IndicatorReportRepository;
+    MetricReportRepository metricReportRepository;
 
     public List<IndicatorReport> getAllByDate(Date date){
         return indicatorReportRepository.findAllByDate(date);
@@ -68,7 +68,7 @@ public class IndicatorReportService {
         for(Metric i: indicator.getMetricList()){
             Double value = calculateMetric(i);
             MetricReport metricReport = new MetricReport(indicatorUpdateReport.getDate(), i, value);
-            MetricReportRepository.save(metricReport);
+            metricReportRepository.save(metricReport);
         }
 
         return indicatorReport;
@@ -89,7 +89,7 @@ public class IndicatorReportService {
         for(Metric i: indicator.getMetricList()){
             Double value = calculateMetric(i);
             MetricReport metricReport = new MetricReport(currentDate, i, value);
-            MetricReportRepository.save(metricReport);
+            metricReportRepository.save(metricReport);
         }
 
         return indicatorReport;
@@ -119,14 +119,16 @@ public class IndicatorReportService {
         }
 
 
-        //calculate simple alternative
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("graal.js");
-        String stringResult;
-        try {
-            stringResult = engine.eval(equationToSolve).toString();
-            return Double.parseDouble(stringResult);
-        } catch (ScriptException e) {
+        // Create a context for evaluating JavaScript code
+        try (Context context = Context.create()) {
+            // Evaluate the equation string in JavaScript and return the result
+            Value result = context.eval("js", equationToSolve);
+
+            // Print the result
+            System.out.println("Result: " + result.asDouble());
+            return result.asDouble();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return 0.0;
