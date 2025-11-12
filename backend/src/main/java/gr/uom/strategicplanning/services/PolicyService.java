@@ -1,7 +1,6 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.controllers.entities.PolicyCreation;
-import gr.uom.strategicplanning.models.Metric;
 import gr.uom.strategicplanning.models.Policy;
 import gr.uom.strategicplanning.repositories.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class PolicyService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Policy with name " + name + " doesn't exist"));
     }
 
-    public Policy createMetric(PolicyCreation policyCreation) {
+    public Policy createPolicy(PolicyCreation policyCreation) {
         Optional<Policy> policyOptional = policyRepository.findByName(policyCreation.getName());
         if(policyOptional.isEmpty()){
             Policy policy = new Policy(policyCreation.getName(),policyCreation.getDescription(),policyCreation.getSector(),policyCreation.getRegion());

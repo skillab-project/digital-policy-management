@@ -1,14 +1,12 @@
 package gr.uom.strategicplanning.controllers.entities;
 
 
-import java.util.List;
-
-public class MetricCreation {
+public class KpiCreation {
     private String name;
     private String equation;
     private String policyName;
 
-    public MetricCreation(String name, String equation, String policyName) {
+    public KpiCreation(String name, String equation, String policyName) {
         this.name = name;
         this.equation = equation;
         this.policyName = policyName;

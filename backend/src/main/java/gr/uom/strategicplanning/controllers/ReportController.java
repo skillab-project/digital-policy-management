@@ -2,9 +2,9 @@ package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReport;
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReportSlim;
-import gr.uom.strategicplanning.models.MetricReport;
+import gr.uom.strategicplanning.models.KpiReport;
 import gr.uom.strategicplanning.models.IndicatorReport;
-import gr.uom.strategicplanning.services.MetricReportService;
+import gr.uom.strategicplanning.services.KpiReportService;
 import gr.uom.strategicplanning.services.IndicatorReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ReportController {
 
     @Autowired
-    MetricReportService metricReportService;
+    KpiReportService kpiReportService;
 
     @Autowired
     IndicatorReportService indicatorReportService;
@@ -44,14 +44,14 @@ public class ReportController {
     }
 
 
-    @GetMapping("/metric")
-    List<MetricReport> getAllMetricReportsByName(@RequestParam String metricName){
-        return metricReportService.getAllMetricReportsByName(metricName);
+    @GetMapping("/kpi")
+    List<KpiReport> getAllKpiReportsByName(@RequestParam String kpiName){
+        return kpiReportService.getAllKpiReportsByName(kpiName);
     }
 
-    @GetMapping("/metric/all")
-    List<MetricReport> getAllMetricReports(){
-        return metricReportService.getAllMetricReports();
+    @GetMapping("/kpi/all")
+    List<KpiReport> getAllKpiReports(){
+        return kpiReportService.getAllKpiReports();
     }
 
 }

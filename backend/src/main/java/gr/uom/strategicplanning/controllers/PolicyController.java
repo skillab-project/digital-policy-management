@@ -27,7 +27,7 @@ public class PolicyController {
 
     @PostMapping
     Policy createPolicy(@RequestBody PolicyCreation policyCreation){
-        return policyService.createMetric(policyCreation);
+        return policyService.createPolicy(policyCreation);
     }
 
 }

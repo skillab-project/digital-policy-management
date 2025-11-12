@@ -15,7 +15,7 @@ public class Policy {
     private String sector;
     private String region;
     @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Metric> metricList;
+    private List<Kpi> kpiList;
 
     public Policy() {
     }
@@ -25,11 +25,11 @@ public class Policy {
         this.description = description;
         this.sector = sector;
         this.region = region;
-        this.metricList = new ArrayList<>();
+        this.kpiList = new ArrayList<>();
     }
 
-    public void addMetric(Metric metric){
-        this.metricList.add(metric);
+    public void addKpi(Kpi kpi){
+        this.kpiList.add(kpi);
     }
 
     public Long getId() {
@@ -72,11 +72,11 @@ public class Policy {
         this.region = region;
     }
 
-    public List<Metric> getMetricList() {
-        return metricList;
+    public List<Kpi> getKpiList() {
+        return kpiList;
     }
 
-    public void setMetricList(List<Metric> metricList) {
-        this.metricList = metricList;
+    public void setKpiList(List<Kpi> kpiList) {
+        this.kpiList = kpiList;
     }
 }

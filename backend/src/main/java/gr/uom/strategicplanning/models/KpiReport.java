@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import java.util.Date;
 
 @Entity
-public class MetricReport {
+public class KpiReport {
 
     @Id
     @GeneratedValue
@@ -19,15 +19,15 @@ public class MetricReport {
             pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private Date date;
     @ManyToOne
-    private Metric metric;
+    private Kpi kpi;
     private Double value;
 
-    public MetricReport() {
+    public KpiReport() {
     }
 
-    public MetricReport(Date date, Metric Metric, Double value) {
+    public KpiReport(Date date, Kpi Kpi, Double value) {
         this.date = date;
-        this.metric = Metric;
+        this.kpi = Kpi;
         this.value = value;
     }
 
@@ -47,12 +47,12 @@ public class MetricReport {
         this.date = date;
     }
 
-    public Metric getMetric() {
-        return metric;
+    public Kpi getKpi() {
+        return kpi;
     }
 
-    public void setMetric(Metric Metric) {
-        this.metric = Metric;
+    public void setKpi(Kpi Kpi) {
+        this.kpi = Kpi;
     }
 
     public Double getValue() {

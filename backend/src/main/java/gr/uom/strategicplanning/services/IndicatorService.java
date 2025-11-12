@@ -41,7 +41,7 @@ public class IndicatorService {
         Optional<Indicator> indicatorOptional1 = indicatorRepository.findByName(indicator.getName());
         Optional<Indicator> indicatorOptional2 = indicatorRepository.findBySymbol(indicator.getSymbol());
         if(!indicatorOptional1.isPresent() && !indicatorOptional2.isPresent()){
-            indicator.setMetricList(new ArrayList<>());
+            indicator.setKpiList(new ArrayList<>());
             indicatorRepository.save(indicator);
             return indicator;
         }

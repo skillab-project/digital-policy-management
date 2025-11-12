@@ -6,15 +6,15 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Metric {
+public class Kpi {
     @Id
     @GeneratedValue
     private Long id;
     private String name;
     private String equation;
     @ManyToMany
-    @JoinTable(name="metric_indicator",
-            joinColumns = @JoinColumn(name="metric_name"),
+    @JoinTable(name="kpi_indicator",
+            joinColumns = @JoinColumn(name="kpi_name"),
             inverseJoinColumns = @JoinColumn(name="indicator_name"))
     private List<Indicator> indicatorList;
     private Double targetValue;
@@ -24,10 +24,10 @@ public class Metric {
     @JsonIgnore
     private Policy policy;
 
-    public Metric() {
+    public Kpi() {
     }
 
-    public Metric(String name, String equation) {
+    public Kpi(String name, String equation) {
         this.name = name;
         this.equation = equation;
     }

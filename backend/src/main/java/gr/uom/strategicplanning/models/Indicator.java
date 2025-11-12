@@ -17,7 +17,7 @@ public class Indicator {
     private String symbol;
     @ManyToMany(mappedBy = "indicatorList")
     @JsonIgnore
-    private List<Metric> metricList;
+    private List<Kpi> kpiList;
 
     public Indicator() {
     }
@@ -27,8 +27,8 @@ public class Indicator {
         this.symbol = symbol;
     }
 
-    public void addMetric(Metric Metric){
-        this.metricList.add(Metric);
+    public void addKpi(Kpi Kpi){
+        this.kpiList.add(Kpi);
     }
 
     public Long getId() {
@@ -55,11 +55,11 @@ public class Indicator {
         this.symbol = symbol;
     }
 
-    public List<Metric> getMetricList() {
-        return metricList;
+    public List<Kpi> getKpiList() {
+        return kpiList;
     }
 
-    public void setMetricList(List<Metric> metricList) {
-        this.metricList = metricList;
+    public void setKpiList(List<Kpi> kpiList) {
+        this.kpiList = kpiList;
     }
 }

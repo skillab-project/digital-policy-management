@@ -4,21 +4,16 @@ import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReport;
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReportSlim;
 import gr.uom.strategicplanning.models.Indicator;
 import gr.uom.strategicplanning.models.IndicatorReport;
-import gr.uom.strategicplanning.models.Metric;
 import gr.uom.strategicplanning.repositories.IndicatorReportRepository;
 import gr.uom.strategicplanning.repositories.IndicatorRepository;
-import gr.uom.strategicplanning.repositories.MetricReportRepository;
+import gr.uom.strategicplanning.repositories.KpiReportRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +32,7 @@ public class IndicatorReportServiceTest {
     private IndicatorRepository indicatorRepository;
 
     @Mock
-    private MetricReportRepository metricReportRepository;
+    private KpiReportRepository kpiReportRepository;
 
     @InjectMocks
     private IndicatorReportService indicatorReportService;
@@ -69,7 +64,7 @@ public class IndicatorReportServiceTest {
     void testCreateIndicatorReport_Success() {
         Date now = new Date();
         Indicator indicator = new Indicator("TestIndicator", "TI");
-        indicator.setMetricList(Collections.emptyList()); // no metrics attached
+        indicator.setKpiList(Collections.emptyList()); // no kpi attached
 
         IndicatorUpdateReport update = new IndicatorUpdateReport();
         update.setName("TestIndicator");
@@ -103,7 +98,7 @@ public class IndicatorReportServiceTest {
     void testCreateIndicatorReportIncreaseValue_Success() {
         Date previousDate = new Date(System.currentTimeMillis() - 10000);
         Indicator indicator = new Indicator("TestIndicator", "TI");
-        indicator.setMetricList(Collections.emptyList()); // no metrics for simplicity
+        indicator.setKpiList(Collections.emptyList()); // no kpi for simplicity
 
         IndicatorReport previousReport = new IndicatorReport(previousDate, indicator, 5.0);
 

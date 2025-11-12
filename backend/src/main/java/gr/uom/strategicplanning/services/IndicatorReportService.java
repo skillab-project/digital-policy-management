@@ -2,11 +2,11 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReport;
 import gr.uom.strategicplanning.controllers.entities.IndicatorUpdateReportSlim;
-import gr.uom.strategicplanning.models.Metric;
-import gr.uom.strategicplanning.models.MetricReport;
+import gr.uom.strategicplanning.models.Kpi;
+import gr.uom.strategicplanning.models.KpiReport;
 import gr.uom.strategicplanning.models.Indicator;
 import gr.uom.strategicplanning.models.IndicatorReport;
-import gr.uom.strategicplanning.repositories.MetricReportRepository;
+import gr.uom.strategicplanning.repositories.KpiReportRepository;
 import gr.uom.strategicplanning.repositories.IndicatorReportRepository;
 import gr.uom.strategicplanning.repositories.IndicatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.graalvm.polyglot.*;
 
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +30,7 @@ public class IndicatorReportService {
     @Autowired
     IndicatorRepository indicatorRepository;
     @Autowired
-    MetricReportRepository metricReportRepository;
+    KpiReportRepository kpiReportRepository;
 
     public List<IndicatorReport> getAllByDate(Date date){
         return indicatorReportRepository.findAllByDate(date);
@@ -63,12 +60,12 @@ public class IndicatorReportService {
         IndicatorReport indicatorReport = new IndicatorReport(indicatorUpdateReport.getDate(), indicator, indicatorUpdateReport.getValue());
         indicatorReportRepository.save(indicatorReport);
 
-        //update all metric that have this indicators
-        // by creating a MetricReport for each one
-        for(Metric i: indicator.getMetricList()){
-            Double value = calculateMetric(i);
-            MetricReport metricReport = new MetricReport(indicatorUpdateReport.getDate(), i, value);
-            metricReportRepository.save(metricReport);
+        //update all kpi that have this indicators
+        // by creating a KpiReport for each one
+        for(Kpi i: indicator.getKpiList()){
+            Double value = calculateKpi(i);
+            KpiReport kpiReport = new KpiReport(indicatorUpdateReport.getDate(), i, value);
+            kpiReportRepository.save(kpiReport);
         }
 
         return indicatorReport;
@@ -84,19 +81,19 @@ public class IndicatorReportService {
         IndicatorReport indicatorReport = new IndicatorReport(currentDate, indicator, newValue);
         indicatorReportRepository.save(indicatorReport);
 
-        //update all metric that have this indicators
-        // by creating a MetricReport for each one
-        for(Metric i: indicator.getMetricList()){
-            Double value = calculateMetric(i);
-            MetricReport metricReport = new MetricReport(currentDate, i, value);
-            metricReportRepository.save(metricReport);
+        //update all kpi that have this indicators
+        // by creating a KpiReport for each one
+        for(Kpi i: indicator.getKpiList()){
+            Double value = calculateKpi(i);
+            KpiReport kpiReport = new KpiReport(currentDate, i, value);
+            kpiReportRepository.save(kpiReport);
         }
 
         return indicatorReport;
     }
 
-    private Double calculateMetric(Metric i) {
-        //change metrics with their last value
+    private Double calculateKpi(Kpi i) {
+        //change kpis with their last value
         String[] equation = i.getEquation().split(" ");
         String equationToSolve = "";
         List<Indicator> indicatorList = indicatorRepository.findAll();
@@ -104,7 +101,7 @@ public class IndicatorReportService {
             boolean isIndicator = false;
             for(Indicator indicator : indicatorList){
                 if(indicator.getSymbol().equals(str)){
-                    //get last value of this metric
+                    //get last value of this kpi
                     List<IndicatorReport> indicatorReportList = indicatorReportRepository.findAllByIndicatorSymbol(indicator.getSymbol());
                     if(!indicatorReportList.isEmpty()) {
                         IndicatorReport indicatorReport =  Collections.max(indicatorReportList, Comparator.comparing(IndicatorReport::getDate));
@@ -146,18 +143,18 @@ public class IndicatorReportService {
                 });
 
 
-        //delete Metric Reports of this indicator report
-        List<MetricReport> metricReport = MetricReportRepository.findAllByDate(indicatorReport.getDate());
-        for (Metric metric: indicator.getMetricList()){
-            for (MetricReport mr: metricReport) {
-                if (metric.getName().equals(mr.getMetric().getName())){
-                    MetricReportRepository.delete(mr);
+        //delete Kpi Reports of this indicator report
+        List<KpiReport> kpiReport = kpiReportRepository.findAllByDate(indicatorReport.getDate());
+        for (Kpi kpi: indicator.getKpiList()){
+            for (KpiReport mr: kpiReport) {
+                if (kpi.getName().equals(mr.getKpi().getName())){
+                    KpiReportRepository.delete(mr);
                 }
             }
         }
 
         //toDo
-        //Update values of future Metric Reports which used this indicator value
+        //Update values of future Kpi Reports which used this indicator value
 
         indicatorReportRepository.delete(indicatorReport);
         */
