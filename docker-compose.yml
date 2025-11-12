@@ -26,7 +26,6 @@ services:
       POSTGRES_PASSWORD: 30a301d7257
       POSTGRES_DB: test_db
     volumes:
-       - policy_postgresql:/var/lib/postgresql
        - policy_postgresql_data:/var/lib/postgresql/data
     ports:
       - '5455:5432'
@@ -92,8 +91,11 @@ services:
       io.portainer.accesscontrol.teams: skillab-all
 
 volumes:
-  policy_postgresql:
   policy_postgresql_data:
+    labels:
+      io.portainer.accesscontrol.teams: skillab-all
   policy_postgres_db:
+    labels:
+      io.portainer.accesscontrol.teams: skillab-all
   niogit:
   #niogit:
