@@ -3,8 +3,10 @@ package gr.uom.strategicplanning.services;
 import gr.uom.strategicplanning.controllers.entities.MetricCreation;
 import gr.uom.strategicplanning.models.Metric;
 import gr.uom.strategicplanning.models.Indicator;
+import gr.uom.strategicplanning.models.Policy;
 import gr.uom.strategicplanning.repositories.MetricRepository;
 import gr.uom.strategicplanning.repositories.IndicatorRepository;
+import gr.uom.strategicplanning.repositories.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class MetricService {
     MetricRepository MetricRepository;
     @Autowired
     IndicatorRepository indicatorRepository;
+    @Autowired
+    PolicyRepository policyRepository;
 
     public List<Metric> getAllMetrics(){
         return MetricRepository.findAll();
@@ -38,10 +42,15 @@ public class MetricService {
 
     @Transactional
     public Metric createMetric(MetricCreation metricCreation){
+        Policy policy = policyRepository.findByName(metricCreation.getPolicyName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Policy with name " + metricCreation.getPolicyName() + " doesn't exist"));
         Optional<Metric> metricOptional = MetricRepository.findByName(metricCreation.getName());
         if(!metricOptional.isPresent()){
             Metric metric = new Metric(metricCreation.getName(), metricCreation.getEquation());
+            metric.setPolicy(policy);
             MetricRepository.save(metric);
+            policy.addMetric(metric);
+            policyRepository.save(policy);
             List<Indicator> indicatorList = new ArrayList<>();
             for(String st: metricCreation.getEquation().split(" ")){
                 if(!isNumeric(st)) {
@@ -65,5 +74,24 @@ public class MetricService {
             return false;
         }
         return pattern.matcher(strNum).matches();
+    }
+
+    public List<Metric> getAllMetricsOfPolicy(String policyName) {
+        Policy policy = policyRepository.findByName(policyName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Policy with name " + policyName + " doesn't exist"));
+        return policy.getMetricList();
+    }
+
+    public Metric updateTargetValues(String name, Double targetValue, String targetTime) {
+        Metric metric = MetricRepository.findByName(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Metric with name " + name + " doesn't exist"));
+        if(targetValue!=null){
+            metric.setTargetValue(targetValue);
+        }
+        if(targetTime!=null && !targetTime.isEmpty()){
+            metric.setTargetTime(targetTime);
+        }
+        MetricRepository.save(metric);
+        return metric;
     }
 }

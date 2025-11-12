@@ -1,5 +1,7 @@
 package gr.uom.strategicplanning.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,6 +17,12 @@ public class Metric {
             joinColumns = @JoinColumn(name="metric_name"),
             inverseJoinColumns = @JoinColumn(name="indicator_name"))
     private List<Indicator> indicatorList;
+    private Double targetValue;
+    private String targetTime;
+    @ManyToOne
+    @JoinColumn(name = "policy_id")
+    @JsonIgnore
+    private Policy policy;
 
     public Metric() {
     }
@@ -22,6 +30,30 @@ public class Metric {
     public Metric(String name, String equation) {
         this.name = name;
         this.equation = equation;
+    }
+
+    public Policy getPolicy() {
+        return policy;
+    }
+
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
+    }
+
+    public Double getTargetValue() {
+        return targetValue;
+    }
+
+    public void setTargetValue(Double targetValue) {
+        this.targetValue = targetValue;
+    }
+
+    public String getTargetTime() {
+        return targetTime;
+    }
+
+    public void setTargetTime(String targetTime) {
+        this.targetTime = targetTime;
     }
 
     public Long getId() {

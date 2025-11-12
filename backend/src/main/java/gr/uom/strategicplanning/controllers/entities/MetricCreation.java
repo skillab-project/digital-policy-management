@@ -6,10 +6,12 @@ import java.util.List;
 public class MetricCreation {
     private String name;
     private String equation;
+    private String policyName;
 
-    public MetricCreation(String name, String equation, List<String> indicatorList) {
+    public MetricCreation(String name, String equation, String policyName) {
         this.name = name;
         this.equation = equation;
+        this.policyName = policyName;
     }
 
     public String getName() {
@@ -28,4 +30,11 @@ public class MetricCreation {
         this.equation = equation;
     }
 
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
 }

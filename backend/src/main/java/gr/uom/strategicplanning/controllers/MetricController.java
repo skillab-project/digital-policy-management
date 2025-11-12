@@ -16,8 +16,13 @@ public class MetricController {
     MetricService MetricService;
 
     @GetMapping("/all")
-    List<Metric> getAllMertics(){
+    List<Metric> getAllMetrics(){
         return MetricService.getAllMetrics();
+    }
+
+    @GetMapping("/allPolicy")
+    List<Metric> getAllMetricsOfPolicy(@RequestParam String policyName){
+        return MetricService.getAllMetricsOfPolicy(policyName);
     }
 
     @GetMapping
@@ -28,5 +33,10 @@ public class MetricController {
     @PostMapping
     Metric createMetric(@RequestBody MetricCreation metricCreation){
         return MetricService.createMetric(metricCreation);
+    }
+
+    @PutMapping
+    Metric updateTargetValues(@RequestParam String name, @RequestParam(required = false) Double targetValue, @RequestParam(required = false) String targetTime){
+        return MetricService.updateTargetValues(name, targetValue, targetTime);
     }
 }
