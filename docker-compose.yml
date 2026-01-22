@@ -104,3 +104,7 @@ volumes:
   niogit:
     labels:
       io.portainer.accesscontrol.teams: skillab-all
+
+networks:
+  shared-net:
+    external: true
