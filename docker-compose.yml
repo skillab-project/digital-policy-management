@@ -49,9 +49,11 @@ services:
       - JBPM_DB_NAME=jbpm
       - JBPM_DB_USER=jbpm
       - JBPM_DB_PASSWORD=jbpm
-      - KIE_SERVER_LOCATION=http://localhost/kie-server/services/rest/server
+      - KIE_SERVER_LOCATION=https://portal.skillab-project.eu/kie-server/services/rest/server
     depends_on:
       - jbpm-postgres-policy
+    ports:
+      - '8181:8080'
     networks:
       - shared-net
 
