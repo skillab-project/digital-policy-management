@@ -57,12 +57,18 @@ public class IndicatorReportService {
                 .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Indicator with name "+indicatorUpdateReport.getName()+" doesn't exist");
                 });
+        if(indicator.isDeleted()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Indicator with name "+indicator.getName()+" is deleted. Restore it before adding values");
+        }
         IndicatorReport indicatorReport = new IndicatorReport(indicatorUpdateReport.getDate(), indicator, indicatorUpdateReport.getValue());
         indicatorReportRepository.save(indicatorReport);
 
         //update all kpi that have this indicators
         // by creating a KpiReport for each one
         for(Kpi i: indicator.getKpiList()){
+            if(i.isDeleted()){
+                continue; // soft-deleted KPIs are not recalculated
+            }
             Double value = calculateKpi(i);
             KpiReport kpiReport = new KpiReport(indicatorUpdateReport.getDate(), i, value);
             kpiReportRepository.save(kpiReport);
@@ -76,6 +82,9 @@ public class IndicatorReportService {
                 .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Indicator with name "+indicatorUpdateReportSlim.getName()+" doesn't exist");
                 });
+        if(indicator.isDeleted()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Indicator with name "+indicator.getName()+" is deleted. Restore it before adding values");
+        }
         Double newValue = getLastIndicatorReportsByIndicatorName(indicator.getName()).getValue() +indicatorUpdateReportSlim.getValue();
         Date currentDate = new Date();
         IndicatorReport indicatorReport = new IndicatorReport(currentDate, indicator, newValue);
@@ -84,6 +93,9 @@ public class IndicatorReportService {
         //update all kpi that have this indicators
         // by creating a KpiReport for each one
         for(Kpi i: indicator.getKpiList()){
+            if(i.isDeleted()){
+                continue; // soft-deleted KPIs are not recalculated
+            }
             Double value = calculateKpi(i);
             KpiReport kpiReport = new KpiReport(currentDate, i, value);
             kpiReportRepository.save(kpiReport);

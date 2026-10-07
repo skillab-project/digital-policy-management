@@ -33,7 +33,7 @@ public class KpiServiceTest {
     @Test
     void testGetAllKpis() {
         List<Kpi> kpis = List.of(new Kpi("kpi1", "a + b"));
-        when(kpiRepository.findAll()).thenReturn(kpis);
+        when(kpiRepository.findAllActive()).thenReturn(kpis);
 
         List<Kpi> result = kpiService.getAllKpis();
 
@@ -66,4 +66,4 @@ public class KpiServiceTest {
         assertTrue(kpiService.isNumeric("-123.45"));
         assertFalse(kpiService.isNumeric("abc"));
     }
-}
+}

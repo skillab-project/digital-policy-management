@@ -1,8 +1,11 @@
 package gr.uom.strategicplanning.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Policy {
@@ -72,7 +75,20 @@ public class Policy {
         this.region = region;
     }
 
+    /**
+     * Active (not soft-deleted) KPIs of this policy. This is what the API returns as "kpiList".
+     * Hibernate uses field access here, so filtering in the getter does not affect persistence.
+     */
     public List<Kpi> getKpiList() {
+        if (kpiList == null) {
+            return null;
+        }
+        return kpiList.stream().filter(k -> !k.isDeleted()).collect(Collectors.toList());
+    }
+
+    /** All KPIs of this policy, including soft-deleted ones. Internal use only. */
+    @JsonIgnore
+    public List<Kpi> getAllKpisIncludingDeleted() {
         return kpiList;
     }
 

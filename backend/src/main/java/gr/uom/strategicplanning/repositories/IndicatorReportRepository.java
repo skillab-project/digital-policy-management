@@ -16,4 +16,6 @@ public interface IndicatorReportRepository extends JpaRepository<IndicatorReport
     IndicatorReport findFirstByIndicator_NameOrderByDateDesc(String name);
     IndicatorReport findTopByIndicatorSymbol(String symbol);
     //Optional<IndicatorReport> findByDateAndIndicatorName(Date date, String name);
+    void deleteAllByIndicator_Id(Long indicatorId);
+    long countByIndicator_Id(Long indicatorId);
 }

@@ -3,6 +3,7 @@ package gr.uom.strategicplanning.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,11 @@ public class Kpi {
     @JoinColumn(name = "policy_id")
     @JsonIgnore
     private Policy policy;
+    // Soft-delete flag. Nullable wrapper + DB default so that ddl-auto=update can add
+    // the column to existing tables without breaking rows that have no value yet.
+    @Column(columnDefinition = "boolean default false")
+    private Boolean deleted = false;
+    private Date deletedAt;
 
     public Kpi() {
     }
@@ -30,6 +36,27 @@ public class Kpi {
     public Kpi(String name, String equation) {
         this.name = name;
         this.equation = equation;
+    }
+
+    public boolean isDeleted() {
+        return Boolean.TRUE.equals(deleted);
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    /** Name of the owning policy, exposed in JSON so the UI can show it (e.g. in the trash). */
+    public String getPolicyName() {
+        return policy != null ? policy.getName() : null;
     }
 
     public Policy getPolicy() {

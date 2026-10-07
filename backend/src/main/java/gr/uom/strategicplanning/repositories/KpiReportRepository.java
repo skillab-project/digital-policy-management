@@ -13,4 +13,6 @@ public interface KpiReportRepository extends JpaRepository<KpiReport, Long> {
     List<KpiReport> findAllByDateBetween(Date dateStart, Date dateEnd);
     List<KpiReport> findAllByKpiName(String name);
     KpiReport findTopByKpiName(String name);
+    void deleteAllByKpi_Id(Long kpiId);
+    long countByKpi_Id(Long kpiId);
 }

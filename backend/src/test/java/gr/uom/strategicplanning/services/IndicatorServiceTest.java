@@ -30,7 +30,7 @@ public class IndicatorServiceTest {
     @Test
     void testGetAllIndicators() {
         List<Indicator> indicators = List.of(new Indicator("ind1", "A"));
-        when(indicatorRepository.findAll()).thenReturn(indicators);
+        when(indicatorRepository.findAllActive()).thenReturn(indicators);
 
         List<Indicator> result = indicatorService.getAllIndicators();
 
@@ -56,4 +56,4 @@ public class IndicatorServiceTest {
             indicatorService.getIndicatorWithName("missing");
         });
     }
-}
+}
